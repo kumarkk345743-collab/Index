@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Bestie! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ff69b4; 
+            --light-pink: #fce4ec; 
+            --accent-purple: #9c27b0; 
+            --text-dark: #333;
+            --text-light: #fff;
+            --card-bg: #fff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--light-pink);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; 
+            color: var(--text-dark);
+        }
+
+        /* Background Confetti and Hearts */
+        .background-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ffc0cb 5px, transparent 5px),
+                radial-gradient(circle at 80% 90%, #ffe552 4px, transparent 4px);
+            background-size: 100px 100px;
+            opacity: 0.7;
+            animation: slow-float 20s infinite linear;
+        }
+
+        @keyframes slow-float {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* Main Content Card */
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Step Transitions */
+        .card-step {
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        .active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Typography */
+        .title, .birthday-title {
+            color: var(--primary-pink);
+            font-size: 2em;
+            font-family: 'Pacifico', cursive; 
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--accent-purple);
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        /* Countdown Timer Styling */
+        .countdown-timer {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .timer-box {
+            background-color: var(--light-pink);
+            padding: 12px 6px;
+            border-radius: 12px;
+            flex: 1;
+            border: 1px solid var(--primary-pink);
+        }
+
+        .number {
+            display: block;
+            font-size: 1.6em;
+            font-weight: bold;
+            color: var(--accent-purple);
+        }
+
+        .label {
+            font-size: 0.8em;
+            color: var(--primary-pink);
+            text-transform: uppercase;
+        }
+
+        /* Message Boxes */
+        .message-box {
+            background-color: var(--light-pink);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .final-message {
+            text-align: left;
+            background-color: #fff0f5; 
+            padding: 25px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .transition-message {
+            font-size: 1.6em;
+            color: var(--primary-pink);
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .action-button, .next-button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(90deg, #ff69b4, #e91e63, #9c27b0); 
+            color: var(--text-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .action-button:hover, .next-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hidden.next-button {
+            display: none !important;
+        }
+
+        /* Step 3 (Loading) */
+        .loading-box {
+            padding: 40px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .loading-step p {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--primary-pink);
+            margin: 10px 0;
+        }
+        .loading-step .heart-icon {
+            font-size: 2.5em;
+            animation: beat 1s infinite alternate;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .loading-step .emojis {
+            font-size: 1.8em;
+        }
+
+        @keyframes beat {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        /* Step 4 (Card Open Area) */
+        .card-open-area {
+            background: linear-gradient(135deg, #a366ff, #ff66c4); 
+            color: var(--text-light);
+            padding: 50px 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .card-open-area:hover {
+            opacity: 0.9;
+        }
+
+        .card-open-area p {
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 5px 0;
+        }
+
+        .gift-icon {
+            font-size: 3.5em;
+            display: block;
+        }
+
+        .footer-message {
+            font-size: 0.95em;
+            color: #666;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    
+    <audio id="birthdaySong" loop>
+        <source src="birthday-song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="background-animation"></div>
+
+    <div class="container">
+
+        <div id="step-1" class="card-step active">
+            <h2 class="title">Your Special Day is Almost Here ❤️</h2>
+            <div class="countdown-timer">
+                <div class="timer-box">
+                    <span id="days" class="number">0</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="timer-box">
+                    <span id="hours" class="number">0</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="timer-box">
+                    <span id="minutes" class="number">0</span>
+                    <span class="label">Minutes</span>
+                </div>
+                <div class="timer-box">
+                    <span id="seconds" class="number">0</span> 
+                    <span class="label">Seconds</span>
+                </div>
+            </div>
+            <p class="message-box">Just a little more... A small gift for my favorite person ✨</p>
+            <button id="next-1" class="next-button hidden">It's time! ✨</button>
+        </div>
+
+        <div id="step-2" class="card-step hidden">
+            <h2 class="title">Your Special Day is Almost Here ❤️</h2>
+            <h3 class="transition-message">It's time!</h3>
+            <p class="message-box">Just a little more... A small gift for my favorite person ✨</p>
+            <button id="next-2" class="action-button">🎁 For you →</button>
+        </div>
+
+        <div id="step-3" class="card-step hidden loading-step">
+            <div class="loading-box">
+                <span class="heart-icon">❤️❤️</span>
+                <p>Loading something special...</p>
+                <div class="emojis">🎂 ✨ 🎁 ❤️ 🎈</div>
+            </div>
+        </div>
+
+        <div id="step-4" class="card-step hidden">
+            <h2 class="birthday-title">Happy Birthday! 🎂✨</h2>
+            <h3 class="subtitle">To My Favorite Bestie! 👯‍♀️</h3>
+            
+            <div class="card-open-area" id="open-card-button">
+                <p>Tap to open your card</p>
+                <span class="gift-icon">🎁</span>
+            </div>
+
+            <p class="footer-message">
+                May every wish you make today come true. You deserve the world, and I'll always be here to remind you of that.
+                <br>Let's always stay like this... together, forever 💖
+            </p>
+        </div>
+
+        <div id="step-5" class="card-step hidden">
+            <h2 class="birthday-title">Happy Birthday! 🎂✨</h2>
+            <h3 class="subtitle">To My Favorite Bestie! 👯‍♀️</h3>
+
+            <p class="message-box final-message">
+                Just wanted to remind you—you're my favorite human. My days are better, laughs are louder, and life is sweeter because you're in it.
+                <br><br>
+                I hope your birthday is full of love, magic, and everything that makes you smile! Wishing you all the joy and success you deserve. You're the best! ❤️
+            </p>
+            
+            <p class="footer-message">
+                May every wish you make today come true. You deserve the world, and I'll always be here to remind you of that.
+                <br>Let's always stay like this... together, forever 💖
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- Page Transition Logic ---
+        function showStep(stepId) {
+            document.querySelectorAll('.card-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('hidden');
+            });
+
+            const targetStep = document.getElementById(stepId);
+            if (targetStep) {
+                setTimeout(() => {
+                    targetStep.classList.remove('hidden');
+                    targetStep.classList.add('active');
+                }, 50);
+            }
+        }
+
+        // --- Countdown Logic ---
+        // 🚨 Target date is set to 10.5 seconds from the moment the code loads.
+        const birthdayDate = new Date().getTime() + 10500; 
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = birthdayDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (document.getElementById('days')) {
+                document.getElementById('days').innerText = days < 0 ? 0 : days;
+                document.getElementById('hours').innerText = hours < 0 ? 0 : hours;
+                document.getElementById('minutes').innerText = minutes < 0 ? 0 : minutes;
+                document.getElementById('seconds').innerText = seconds < 0 ? 0 : seconds;
+            }
+
+            // Check if the countdown is over
+            if (distance <= 0) {
+                clearInterval(countdownInterval);
+                const nextButton1 = document.getElementById('next-1');
+                if (nextButton1) {
+                    // Lock the display at 00:00:00:00 
+                    document.getElementById('days').innerText = 0;
+                    document.getElementById('hours').innerText = 0;
+                    document.getElementById('minutes').innerText = 0;
+                    document.getElementById('seconds').innerText = 0;
+                    
+                    nextButton1.classList.remove('hidden');
+                    nextButton1.onclick = () => {
+                        showStep('step-2');
+                        
+                        // 🎶 TRIGGER MUSIC PLAY ON BUTTON CLICK (due to browser autoplay rules)
+                        const audio = document.getElementById('birthdaySong');
+                        if (audio) {
+                            audio.play().catch(error => {
+                                console.log("Autoplay blocked, user interaction required.");
+                            });
+                        }
+                    };
+                }
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); 
+
+        // --- Event Listeners for Transitions ---
+        const nextButton2 = document.getElementById('next-2');
+        if(nextButton2) {
+            nextButton2.onclick = () => {
+                showStep('step-3');
+                setTimeout(() => {
+                    showStep('step-4');
+                }, 3000); 
+            };
+        }
+
+        const openCardButton = document.getElementById('open-card-button');
+        if(openCardButton) {
+            openCardButton.onclick = () => {
+                showStep('step-5');
+            };
+        }
+    </script>
+</body>
+</html>
